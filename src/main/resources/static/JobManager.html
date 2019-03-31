@@ -14,6 +14,10 @@
             padding:5px;
             overflow:hidden
         }
+
+        .spHeight  td {
+            height: 30px;
+        }
     </style>
 
 </head>
@@ -34,11 +38,12 @@
                 ref="testTable"
                 :data="tableData"
                 style="width:100%"
+                class="spHeight"
                 border
         >
             <el-table-column
                     prop="job_NAME"
-                    label="任务名称"
+                    label="任务名称1"
                     sortable
                     show-overflow-tooltip>
             </el-table-column>

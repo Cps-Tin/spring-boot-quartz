@@ -8,11 +8,11 @@ mybatis:
 
 spring:
   datasource:
-    driver-class-name: com.mysql.jdbc.Driver
     name: sv
-    url: jdbc:mysql://115.29.32.62:3306/quartz?useUnicode=true&characterEncoding=utf8
-    username: root
-    password: root
+    url: jdbc:sqlserver://localhost:1433;DatabaseName=quartz
+    username: sa
+    password: 123
+    driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     type: com.alibaba.druid.pool.DruidDataSource
 
 

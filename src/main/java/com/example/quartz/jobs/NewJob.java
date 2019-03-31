@@ -23,5 +23,6 @@ public class NewJob implements BaseJob{
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         log.info("Hello Job执行时间: " + new Date());
+        System.out.println(context.getJobDetail().getKey());
     }
 }
