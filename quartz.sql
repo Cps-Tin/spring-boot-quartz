@@ -11,7 +11,10 @@
  Target Server Version : 50537
  File Encoding         : utf-8
 
- Date: 09/28/2018 14:11:17 PM
+ Date: 09/28/2018 14:11:17 PM--#
+
+ 数据库什么的不需要改动，用到数据库主要是项目重启时，可以保留之前的定时任务
+
 */
 
 SET NAMES utf8mb4;

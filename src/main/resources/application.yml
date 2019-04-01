@@ -11,7 +11,7 @@ spring:
     name: sv
     url: jdbc:sqlserver://localhost:1433;DatabaseName=quartz
     username: sa
-    password: 123
+    password: sa123
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     type: com.alibaba.druid.pool.DruidDataSource
 

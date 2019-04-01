@@ -1,6 +1,5 @@
 package com.example.quartz.jobs;
 
-import com.example.quartz.service.BaseJob;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
