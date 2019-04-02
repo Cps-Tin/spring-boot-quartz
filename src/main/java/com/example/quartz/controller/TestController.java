@@ -8,11 +8,13 @@ import com.example.quartz.jobs.BaseJob;
 import com.example.quartz.service.IJobAndTriggerService;
 import com.example.quartz.tool.DateUnit;
 import com.github.pagehelper.PageInfo;
+import org.quartz.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,9 +34,8 @@ public class TestController {
     private QuartzService quartzService;
 
     //加入Qulifier注解，通过名称注入bean
-//    @Autowired
-//    @Qualifier("Scheduler")
-//    private Scheduler scheduler;
+    @Resource
+    private Scheduler scheduler;
 
     @Autowired
     private DateUnit dateUnit;
@@ -58,6 +59,7 @@ public class TestController {
 
 //            addCronJob(jobInfo);
             return;
+
         }
 //        addSimpleJob(jobInfo);
     }
@@ -133,12 +135,9 @@ public class TestController {
      */
     @PostMapping(value = "/pausejob")
     public void pausejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
-        jobPause(jobClassName, jobGroupName);
+        scheduler.pauseJob(JobKey.jobKey(jobClassName, jobGroupName));
     }
 
-    public void jobPause(String jobClassName, String jobGroupName) throws Exception {
-//        scheduler.pauseJob(JobKey.jobKey(jobClassName, jobGroupName));
-    }
 
     /**
      * 恢复任务
@@ -149,46 +148,47 @@ public class TestController {
      */
     @PostMapping(value = "/resumejob")
     public void resumejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
-        jobresume(jobClassName, jobGroupName);
+        scheduler.resumeJob(JobKey.jobKey(jobClassName, jobGroupName));
     }
 
-    public void jobresume(String jobClassName, String jobGroupName) throws Exception {
-//        scheduler.resumeJob(JobKey.jobKey(jobClassName, jobGroupName));
+
+    /**
+     * 更新任务
+     *
+     * @param jobClassName
+     * @param jobGroupName
+     * @param cronExpression
+     * @throws Exception
+     */
+    @PostMapping(value = "/reschedulejob")
+    public void rescheduleJob(@RequestParam(value = "jobClassName") String jobClassName,
+                              @RequestParam(value = "jobGroupName") String jobGroupName,
+                              @RequestParam(value = "cronExpression") String cronExpression) throws Exception {
+        System.out.println("1."+jobClassName);
+        System.out.println("2."+jobGroupName);
+        System.out.println("3."+cronExpression);
+        jobreschedule(jobClassName, jobGroupName,cronExpression);
+        //更新代码多，是因为需要更改cron
     }
 
-//    /**
-//     * 更新任务
-//     *
-//     * @param jobClassName
-//     * @param jobGroupName
-//     * @param cronExpression
-//     * @throws Exception
-//     */
-//    @PostMapping(value = "/reschedulejob")
-//    public void rescheduleJob(@RequestParam(value = "jobClassName") String jobClassName,
-//                              @RequestParam(value = "jobGroupName") String jobGroupName,
-//                              @RequestParam(value = "cronExpression") String cronExpression) throws Exception {
-//        jobreschedule(jobClassName, jobGroupName, cronExpression);
-//    }
-//
-//    public void jobreschedule(String jobClassName, String jobGroupName, String cronExpression) throws Exception {
-//        try {
-//            TriggerKey triggerKey = TriggerKey.triggerKey(jobClassName, jobGroupName);
-//            // 表达式调度构建器
-//            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
-//
-//            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
-//
-//            // 按新的cronExpression表达式重新构建trigger
-//            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
-//
-//            // 按新的trigger重新设置job执行
-//            scheduler.rescheduleJob(triggerKey, trigger);
-//        } catch (SchedulerException e) {
-//            System.out.println("更新定时任务失败" + e);
-//            throw new Exception("更新定时任务失败");
-//        }
-//    }
+    public void jobreschedule(String jobClassName, String jobGroupName, String cronExpression) throws Exception {
+        try {
+            TriggerKey triggerKey = TriggerKey.triggerKey(jobClassName, jobGroupName);
+            // 表达式调度构建器
+            CronScheduleBuilder scheduleBuilder = CronScheduleBuilder.cronSchedule(cronExpression);
+
+            CronTrigger trigger = (CronTrigger) scheduler.getTrigger(triggerKey);
+
+            // 按新的cronExpression表达式重新构建trigger
+            trigger = trigger.getTriggerBuilder().withIdentity(triggerKey).withSchedule(scheduleBuilder).build();
+
+            // 按新的trigger重新设置job执行
+            scheduler.rescheduleJob(triggerKey, trigger);
+        } catch (SchedulerException e) {
+            System.out.println("更新定时任务失败" + e);
+            throw new Exception("更新定时任务失败");
+        }
+    }
 
     /**
      * 删除任务
@@ -200,14 +200,12 @@ public class TestController {
      */
     @PostMapping(value = "/deletejob")
     public void deletejob(@RequestParam(value = "jobClassName") String jobClassName, @RequestParam(value = "jobGroupName") String jobGroupName) throws Exception {
-        jobdelete(jobClassName, jobGroupName);
+        scheduler.pauseTrigger(TriggerKey.triggerKey(jobClassName, jobGroupName));
+        scheduler.unscheduleJob(TriggerKey.triggerKey(jobClassName, jobGroupName));
+        scheduler.deleteJob(JobKey.jobKey(jobClassName, jobGroupName));
     }
 
-    public void jobdelete(String jobClassName, String jobGroupName) throws Exception {
-//        scheduler.pauseTrigger(TriggerKey.triggerKey(jobClassName, jobGroupName));
-//        scheduler.unscheduleJob(TriggerKey.triggerKey(jobClassName, jobGroupName));
-//        scheduler.deleteJob(JobKey.jobKey(jobClassName, jobGroupName));
-    }
+
 
     /**
      * 查询任务

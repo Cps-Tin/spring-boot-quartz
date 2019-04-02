@@ -5,6 +5,7 @@ import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -21,7 +22,10 @@ public class NewJob implements BaseJob{
     }
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        log.info("Hello Job执行时间: " + new Date());
-        System.out.println(context.getJobDetail().getKey());
+        System.out.println("1."+context.getJobDetail());
+        System.out.println("2."+context.getJobInstance());
+        System.out.println("3."+context.getTrigger());
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        log.info("New Job执行时间: " + sdf.format(new Date()));
     }
 }
