@@ -23,12 +23,13 @@
 --# Another user has pointed out that you will probably need to use the 
 --# JTDS driver
 
---# 数据库什么的不需要改动，用到数据库主要是项目重启时，可以保留之前的定时任务
+--# 用到数据库主要是项目重启时，可以保留之前的定时任务
+--# 给你的数据库添加几张表
 
 --#
 
 
-USE [enter_db_name_here]
+USE [enter_db_name_here] --你项目的数据库
 GO
 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[FK_QRTZ_TRIGGERS_QRTZ_JOB_DETAILS]') AND OBJECTPROPERTY(id, N'ISFOREIGNKEY') = 1)
@@ -349,5 +350,5 @@ ALTER TABLE [dbo].[QRTZ_TRIGGERS] ADD
     [JOB_NAME],
     [JOB_GROUP]
   )
-GOs
+GO
 

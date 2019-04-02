@@ -164,9 +164,6 @@ public class TestController {
     public void rescheduleJob(@RequestParam(value = "jobClassName") String jobClassName,
                               @RequestParam(value = "jobGroupName") String jobGroupName,
                               @RequestParam(value = "cronExpression") String cronExpression) throws Exception {
-        System.out.println("1."+jobClassName);
-        System.out.println("2."+jobGroupName);
-        System.out.println("3."+cronExpression);
         jobreschedule(jobClassName, jobGroupName,cronExpression);
         //更新代码多，是因为需要更改cron
     }
