@@ -29,7 +29,7 @@
 --#
 
 
-USE [Test] --你项目的数据库
+USE [quartz] --你项目的数据库
 GO
 
 IF EXISTS (SELECT * FROM dbo.sysobjects WHERE id = OBJECT_ID(N'[dbo].[FK_QRTZ_TRIGGERS_QRTZ_JOB_DETAILS]') AND OBJECTPROPERTY(id, N'ISFOREIGNKEY') = 1)
